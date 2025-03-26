@@ -5,8 +5,11 @@ import { toast, Toaster } from "react-hot-toast";
 import { useSkinAnalysis } from "../context/SkinAnalysisContext";
 import useGoogleMaps from "../../../hooks/useGoogleMaps";
 
+// Define a union type for valid clinic categories
+type ClinicCategory = "NGO" | "Government" | "Private" | "User";
+
 interface Clinic {
-  category: string;
+  category: ClinicCategory; // Now strictly one of the four
   name: string;
   place_id: string;
   address?: string;
@@ -31,13 +34,13 @@ const ClinicsMap: React.FC<ClinicsMapProps> = ({ clinics, center, userLocation }
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
 
-  // Memoize the icons object so that it doesn't change between renders.
+  // Memoize the icons so they don't recreate on every render
   const icons = useMemo(
     () => ({
       NGO: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
       Government: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
       Private: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-      User: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png", // User location
+      User: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png" // User location
     }),
     []
   );
@@ -69,6 +72,7 @@ const ClinicsMap: React.FC<ClinicsMapProps> = ({ clinics, center, userLocation }
           position: { lat: clinic.location.lat, lng: clinic.location.lng },
           map: map,
           title: clinic.name,
+          // TS now knows clinic.category is one of the keys in icons
           icon: icons[clinic.category] || undefined,
         });
 
