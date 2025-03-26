@@ -1,5 +1,9 @@
 # Streamlit for building the web application
 streamlit==1.41.1
+gunicorn
+eventlet
+flask
+# plus any other dependencies you need
 
 # LangChain for language model chaining
 langchain
