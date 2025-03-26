@@ -5,6 +5,7 @@ gunicorn
 eventlet
 flask
 opencv-python
+gdown
 # plus any other dependencies you need
 
 # LangChain for language model chaining
