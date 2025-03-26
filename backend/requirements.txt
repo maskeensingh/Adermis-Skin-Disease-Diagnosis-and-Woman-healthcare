@@ -3,6 +3,7 @@ streamlit==1.41.1
 gunicorn
 eventlet
 flask
+opencv-python
 # plus any other dependencies you need
 
 # LangChain for language model chaining
