@@ -46,14 +46,8 @@ tiktoken==0.4.0
 # Python-dotenv for managing environment variables
 python-dotenv==1.0.0  # Ensure correct package name
 
-# TensorFlow optimized for macOS
-tensorflow-macos
+tensorflow==2.11.0
 
-# TensorFlow-Metal plugin for GPU acceleration on Apple Silicon
-tensorflow-metal
-
-# Backwards-compatible Keras package for Transformers
-tf-keras # Added to resolve Keras compatibility issues
 
 # Additional dependencies not previously listed
 grpcio==1.69.0  # Required for gRPC communication
