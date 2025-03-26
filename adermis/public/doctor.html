@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doctor Video Consultation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      video {
+        width: 300px;
+        background: #000;
+        border-radius: 8px;
+      }
+      input, button {
+        padding: 10px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Doctor Video Consultation</h1>
+    <input id="roomInput" placeholder="Enter Room Name" />
+    <button id="joinBtn">Join Room</button>
+    <div style="display: flex; gap: 1rem; margin-top: 20px;">
+      <div>
+        <h3>Local Video</h3>
+        <video id="localVideo" autoplay playsinline muted></video>
+      </div>
+      <div>
+        <h3>Remote Video</h3>
+        <video id="remoteVideo" autoplay playsinline></video>
+      </div>
+    </div>
+
+    <!-- Load Socket.IO from CDN -->
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+    <!-- Load SimplePeer from CDN -->
+    <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+    <script>
+      // Use your IP address for the server
+      const socket = io("http://172.20.10.4:5000");
+      let peer;
+      let localStream;
+      let room = "";
+
+      const roomInput = document.getElementById("roomInput");
+      const joinBtn = document.getElementById("joinBtn");
+      const localVideo = document.getElementById("localVideo");
+      const remoteVideo = document.getElementById("remoteVideo");
+
+      joinBtn.addEventListener("click", async () => {
+        room = roomInput.value;
+        if (!room) {
+          alert("Please enter a room name");
+          return;
+        }
+        socket.emit("join", { room });
+        await startLocalStream();
+      });
+
+      socket.on("signal", (data) => {
+        if (peer) {
+          peer.signal(data.signalData);
+        }
+      });
+
+      async function startLocalStream() {
+        try {
+          localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          localVideo.srcObject = localStream;
+          createPeer();
+        } catch (err) {
+          console.error(err);
+          alert("Could not access camera/microphone");
+        }
+      }
+
+      function createPeer() {
+        // Doctor is non-initiator
+        peer = new SimplePeer({
+          initiator: false,
+          trickle: false,
+          stream: localStream,
+        });
+
+        peer.on("signal", (signalData) => {
+          socket.emit("signal", { room, signalData });
+        });
+
+        peer.on("stream", (remoteStream) => {
+          remoteVideo.srcObject = remoteStream;
+        });
+      }
+    </script>
+  </body>
+</html>
