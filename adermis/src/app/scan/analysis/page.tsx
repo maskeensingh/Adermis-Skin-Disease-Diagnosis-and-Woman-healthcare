@@ -27,7 +27,7 @@ export default function AnalysisPage() {
         formData.append('description', input.textDescription);
       }
 
-      const response = await fetch("http://localhost:5000/api/analyze", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analyze`, {
         method: "POST",
         body: formData,
       });
@@ -78,7 +78,7 @@ export default function AnalysisPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/final-diagnosis", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/final-diagnosis`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
