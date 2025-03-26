@@ -46,7 +46,6 @@ tiktoken==0.4.0
 # Python-dotenv for managing environment variables
 python-dotenv==1.0.0  # Ensure correct package name
 
-tensorflow==2.11.0
 
 
 # Additional dependencies not previously listed
