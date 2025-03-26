@@ -16,7 +16,7 @@ import gdown
 url="https://drive.google.com/uc?id=1w0mSk2-OZHFrMDYgSa2JSesF3JXHh0Jx"
 output=os.path.join("model", "skin_disease_model.pth")
 gdown.download(url, output, quiet=False)
-exit(0)
+
 
 # ------------------- Setup -------------------
 load_dotenv()
