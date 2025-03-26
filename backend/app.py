@@ -224,10 +224,7 @@ Respond using this exact format. Each section should have **2–3 short bullet p
 **When to See a Doctor:**
 • [Early warning sign]
 • [Progression or worsening symptom]
-
-Avoid using medical jargon. Keep it factual, helpful, and concise.
 """
-
     
     try:
         treatment_response = genai.GenerativeModel("gemini-2.0-flash").generate_content(treatment_prompt).text.strip()
@@ -384,6 +381,7 @@ def followup():
         return redirect(url_for("final_diagnosis_page"))
     
     return render_template("followup.html", questions=session["followup_questions"])
+
 @app.route("/final_diagnosis", methods=["GET"])
 def final_diagnosis_page():
     if "predictions" not in session or "user_answers" not in session:
@@ -427,11 +425,8 @@ Respond using this exact format. Each section should have **2–3 short bullet p
 **When to See a Doctor:**
 • [Early warning sign]
 • [Progression or worsening symptom]
-
-Avoid using medical jargon. Keep it factual, helpful, and concise.
 """
-
-
+    
     try:
         treatment_response = genai.GenerativeModel("gemini-2.0-flash").generate_content(treatment_prompt).text.strip()
     except Exception:
@@ -445,8 +440,6 @@ Avoid using medical jargon. Keep it factual, helpful, and concise.
         treatment=treatment_response,
         detection_mode=session.get("detection_mode", "Image/Text")
     )
-
-
 
 @app.route("/treatment", methods=["GET"])
 def treatment():
@@ -486,4 +479,6 @@ def video_feed():
 
 # ------------------- Main Entry Point -------------------
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use PORT environment variable if available (for Render deployment)
+    # Note: Keeping socketio.run as is to preserve Socket.IO functionality.
+    socketio.run(app, host="0.0.0.0", port=port, debug=False)
